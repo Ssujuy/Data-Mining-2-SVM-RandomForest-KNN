@@ -170,6 +170,138 @@ NFoldVal(knn_model, 10, X_train, Y_train)
     - Loads GloVe embeddings from a file into a dictionary and initializes a tokenizer to convert text data into sequences of integers.
     - Pads these sequences to a fixed length and computes average embeddings for each padded sequence using the embedding matrix.
 
+```python
+def compute_average_embedding(sequences, embedding_matrix):
+    avg_embeddings = []
+    for seq in sequences:
+        valid_embeddings = [embedding_matrix[idx] for idx in seq if idx != 0]
+        if valid_embeddings:
+            avg_embedding = np.mean(valid_embeddings, axis=0)
+        else:
+            avg_embedding = np.zeros(embedding_matrix.shape[1])
+        avg_embeddings.append(avg_embedding)
+    return np.array(avg_embeddings)
+```
+
+```python
+embedding_index = {}
+glove_path = 'glove.6B/glove.6B.100d.txt'
+
+with open(glove_path, 'r', encoding='utf8') as f:
+    for line in f:
+        values = line.split()
+        word = values[0]
+        coefs = np.asarray(values[1:], dtype='float32')
+        embedding_index[word] = coefs
+
+print("Loaded GloVe embeddings.")
+
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(X_train_2019)
+
+X_train_sequences_2019 = tokenizer.texts_to_sequences(X_train_2019)
+X_test_sequences_2019 = tokenizer.texts_to_sequences(X_test_2019)
+
+maxlen = 100
+X_train_pad_2019 = pad_sequences(X_train_sequences_2019, maxlen=maxlen, padding='post')
+X_test_pad_2019 = pad_sequences(X_test_sequences_2019, maxlen=maxlen, padding='post')
+
+num_words = len(tokenizer.word_index) + 1
+embedding_dim = 100
+
+embedding_matrix = np.zeros((num_words, embedding_dim))
+for word, i in tokenizer.word_index.items():
+    embedding_vector = embedding_index.get(word)
+    if embedding_vector is not None:
+        embedding_matrix[i] = embedding_vector
+
+print("Shape of X_train_pad:", X_train_pad_2019.shape)
+print("Shape of X_test_pad:", X_test_pad_2019.shape)
+
+
+X_train_avg_2019 = compute_average_embedding(X_train_pad_2019, embedding_matrix)
+X_test_avg_2019 = compute_average_embedding(X_test_pad_2019, embedding_matrix)
+```
+
+- **SVM**
+    - Trains an SVM model with a linear kernel on the average embeddings of the training data and makes predictions on the test data.
+    - Calculates and prints precision, recall, and F1-score, along with a detailed classification report, and performs 10-fold cross-validation.
+
+```python
+svm_model_2019 = SVC(kernel='linear', C=1.0, random_state=42)
+
+svm_model_2019.fit(X_train_avg_2019, Y_train_2019)
+
+SVC(kernel='linear', random_state=42)
+
+Y_pred_2019 = svm_model_2019.predict(X_test_avg_2019)
+
+precision = precision_score(Y_test_2019, Y_pred_2019, average='weighted')
+recall = recall_score(Y_test_2019, Y_pred_2019, average='weighted')
+f1 = f1_score(Y_test_2019, Y_pred_2019, average='weighted')
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1-score: {f1:.4f}")
+
+report = classification_report(Y_test_2019, Y_pred_2019)
+print("Classification Report:\n", report)
+```
+
+![SVMClassificationReportWordEmbd](images/SVMClassificationReportWordEmbd.png)
+
+- **Random forest**
+    - Trains a Random Forest classifier with 100 trees on the average embeddings of the training data and makes predictions on the test data.
+    - Calculates and prints precision, recall, and F1-score, along with a detailed classification report, and performs 10-fold cross-validation.
+
+```python
+rf_model_2019 = RandomForestClassifier(n_estimators=100, random_state=42)
+
+rf_model_2019.fit(X_train_avg_2019, Y_train_2019)
+RandomForestClassifier(random_state=42)
+
+Y_pred = rf_model_2019.predict(X_test_avg_2019)
+
+precision = precision_score(Y_test_2019, Y_pred_2019, average='weighted')
+recall = recall_score(Y_test_2019, Y_pred_2019, average='weighted')
+f1 = f1_score(Y_test_2019, Y_pred_2019, average='weighted')
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1-score: {f1:.4f}")
+
+# Print classification report
+report = classification_report(Y_test_2019, Y_pred_2019)
+print("Classification Report:\n", report)
+```
+
+![RandomForestClassificationReportWordEmbd](images/RandomForestClassificationReportWordEmbd.png)
+
+- **KNN**
+    - Trains a K-Nearest Neighbors (KNN) classifier with 5 neighbors on the average embeddings of the training data and makes predictions on the test data.
+    - Calculates and prints precision, recall, and F1-score, along with a detailed classification report, and performs 10-fold cross-validation.
+
+```python
+knn_model_2019 = KNeighborsClassifier(n_neighbors=5)
+
+knn_model_2019.fit(X_train_avg_2019, Y_train_2019)
+
+Y_pred = knn_model_2019.predict(X_test_avg_2019)
+
+precision = precision_score(Y_test_2019, Y_pred_2019, average='weighted')
+recall = recall_score(Y_test_2019, Y_pred_2019, average='weighted')
+f1 = f1_score(Y_test_2019, Y_pred_2019, average='weighted')
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1-score: {f1:.4f}")
+
+report = classification_report(Y_test_2019, Y_pred_2019)
+print("Classification Report:\n", report)
+```
+
+![KNNClassificationReportWordEmbd](images/KNNClassificationReportWordEmbd.png)
+
 ## Results Analysis
 
 - After cross-validation, results for each model are compared. The metrics are averaged, with each model’s strengths analyzed based on precision, recall, and F1-score stability:
