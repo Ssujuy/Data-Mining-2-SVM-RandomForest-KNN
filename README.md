@@ -1,6 +1,16 @@
 # Data-Mining-2-SVM-RandomForest-KNN
 This notebook applies data mining techniques for sentiment analysis using K-Nearest Neighbors (KNN), Support Vector Machine (SVM), and Random Forest models. Precision, recall, and F1-score are calculated through 10-fold cross-validation, providing insight into model reliability and classification accuracy.
 
+## Table of Contents
+- [Helper Functions](#helper-functions)
+- [Preprocessing](#preprocessing)
+- [Annotate data with pretrained model](#annotate-data-with-pretrained-model)
+- [Sentiment Distribution](#sentiment-distribution)
+- [TF-IDF Vectorization](#tf-idf-vectorization)
+- [Word Embeddings](#word-embeddings)
+- [Result Analysis](#result-analysis)
+- [Conclusion](#conclusion)
+
 ## Helper Functions
 
 - Splits data into N folds and iterates over each, training the model on the training folds and evaluating it on the validation fold.
