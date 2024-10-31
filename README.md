@@ -313,7 +313,7 @@ print("Classification Report:\n", report)
 
 Here's an enhanced results analysis and conclusion that compares TF-IDF vectorization and word embeddings (GloVe) for each model:
 
-## Results Analysis
+## Result Analysis
 
 After applying 10-fold cross-validation, the results for each model—using both TF-IDF vectorization and GloVe embeddings—are analyzed in terms of precision, recall, and F1-score. This comparison highlights each model's sensitivity to feature representation.
 
