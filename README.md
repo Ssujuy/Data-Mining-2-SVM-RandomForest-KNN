@@ -300,16 +300,36 @@ print("Classification Report:\n", report)
 
 ![KNNClassificationReportWordEmbd](images/KNNClassificationReportWordEmbd.png)
 
+
+Here's an enhanced results analysis and conclusion that compares TF-IDF vectorization and word embeddings (GloVe) for each model:
+
 ## Results Analysis
 
-- After cross-validation, results for each model are compared. The metrics are averaged, with each model’s strengths analyzed based on precision, recall, and F1-score stability:
-  - KNN: Generally effective but sensitive to data distribution; its performance may vary more than the other models.
-  - SVM: Shows strong generalization and performs well on precision, although computationally more intensive.
-  - Random Forest: Offers robust performance, achieving a balance of precision, recall, and F1-score across folds, indicating strong stability.
-- Results are visualized to compare models, illustrating metric variance and enabling quick insights into model consistency.
+After applying 10-fold cross-validation, the results for each model—using both TF-IDF vectorization and GloVe embeddings—are analyzed in terms of precision, recall, and F1-score. This comparison highlights each model's sensitivity to feature representation.
+
+- **K-Nearest Neighbors (KNN)**
+
+    - **TF-IDF:** KNN demonstrates moderate accuracy but is sensitive to data sparsity in TF-IDF, resulting in variable performance across folds. It performs best on data with clearer separation in vector space but is              limited by TF-IDF's reliance on frequency without semantic understanding.
+    - **GloVe Embeddings:** Using GloVe embeddings significantly enhances KNN's performance consistency by capturing word similarities, leading to improved recall and stability. However, KNN remains more sensitive to             data distribution, and parameter tuning may be required.
+
+- **Support Vector Machine (SVM)**
+
+    - **TF-IDF:** SVM achieves high precision and performs well with TF-IDF due to its ability to find optimal separating hyperplanes in high-dimensional sparse data. This results in fewer false positives, making SVM a           strong choice for TF-IDF representations, especially where accuracy is prioritized.
+    - **GloVe Embeddings:** With GloVe, SVM continues to perform well but is computationally more intensive. GloVe’s semantic information slightly improves recall, though the precision gains are less significant compared         to TF-IDF, as SVM is already adept at maximizing the margin between classes.
+
+- **Random Forest**
+
+    - **TF-IDF:** Random Forest handles TF-IDF features effectively, achieving a balance between precision, recall, and F1-score. Its ensemble approach makes it resilient to feature sparsity, yielding steady performance          across folds.
+    - **GloVe Embeddings:** When applied with GloVe embeddings, Random Forest benefits from the semantic richness, achieving the best balance across all metrics. GloVe provides enhanced feature interactions, enabling             Random Forest to maintain high stability and generalization in both precision and recall.
+
+Results are visualized to compare each model’s variance, showing that feature representation impacts KNN more significantly, while Random Forest and SVM display stable performance across both TF-IDF and GloVe embeddings. Random Forest, however, shows the highest overall consistency in both representations.
 
 ## Conclusion
 
-- Based on metric averages and standard deviations from cross-validation, the Random Forest model emerges as the most reliable choice for this dataset due to its balanced performance across folds.
-- KNN showed promise with high accuracy in certain folds, but its performance variability suggests that parameter tuning may be necessary for production use.
-- SVM displayed consistent performance in terms of precision, suggesting that it may be a suitable choice for applications where minimizing false positives is critical.
+Based on the cross-validation analysis across feature representations
+
+- **Random Forest** emerges as the most reliable model, consistently achieving balanced precision, recall, and F1-score across both TF-IDF and GloVe embeddings. Its ability to leverage feature richness from GloVe makes it highly adaptable, indicating robustness for real-world applications.
+
+- **KNN** shows high accuracy with GloVe embeddings, benefiting from the semantic depth. However, due to variability in TF-IDF, it is recommended for use when embeddings are available, with parameter tuning to enhance reliability.
+
+- **SVM** displays strong precision with TF-IDF, making it ideal for scenarios where avoiding false positives is critical. The GloVe representation improves recall, but due to computational demands, SVM with GloVe may be reserved for smaller or more specialized datasets.
