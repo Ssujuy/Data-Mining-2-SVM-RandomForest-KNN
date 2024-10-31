@@ -52,6 +52,8 @@ year2019_sample.loc[:1999, 'sentiment'] = [annotation[0]['label'] for annotation
 print(year2019_sample.head(10))
 ```
 
+![annotateData](images/annotateData.png)
+
 ## Sentiment Distribution
 
 - Groups the sampled DataFrame by 'sentiment', counts occurrences, and resets the index to create a summary DataFrame.
@@ -73,6 +75,9 @@ plt.ylim(bottom=0)
 plt.tight_layout()
 plt.show()
 ```
+
+![sentimentDistribution2019](images/sentimentDistribution2019.png)
+![sentimentDistribution2023](images/sentimentDistribution2023.png)
 
 ## Model Training
 
@@ -112,6 +117,8 @@ print(f"F1-score: {f1:.4f}")
 print(classification_report(Y_test_2019, y_pred_svm_2019))
 ```
 
+![SVMClassificationReport](images/SVMClassificationReport.png)
+
 - **Random forest**
     - Trains a Random Forest classifier with 100 trees on the TF-IDF vectorized training data and makes predictions on the test data.
     - Calculates and prints precision, recall, and F1-score, along with a detailed classification report, and performs 10-fold cross-validation.
@@ -132,6 +139,8 @@ print("Random Forest Classification Report:")
 print(report_rf_2019)
 ```
 
+![RandomForestClassificationReport](images/RandomForestClassificationReport.png)
+
 - **KNN**
     - Trains a K-Nearest Neighbors (KNN) classifier with 5 neighbors on the TF-IDF vectorized training data and makes predictions on the test data.
     - Calculates and prints precision, recall, and F1-score, along with a detailed classification report, and performs 10-fold cross-validation.
@@ -142,6 +151,8 @@ knn_model.fit(X_train, Y_train)
 Y_pred = knn_model.predict(X_test)
 precision = precision_score(Y_test, Y_pred, average='weighted')
 ```
+
+![KNNClassificationReport](images/KNNClassificationReport.png)
 
 - **Cross-Validation**
 
