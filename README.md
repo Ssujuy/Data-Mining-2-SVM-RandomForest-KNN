@@ -30,6 +30,28 @@ sequences = tokenizer.texts_to_sequences(data['text_column'])
 word_index = tokenizer.word_index
 ```
 
+## Annotate data with pretrained model
+
+- Initializes a sentiment analysis pipeline and selects the 'comments' column from the sampled DataFrame for annotation.
+- Annotates each comment, truncates it to 512 characters, and stores the sentiment label in a new column 'sentiment'.
+
+```python
+annotator = pipeline("sentiment-analysis")
+
+comments_to_annotate = year2019_sample['comments']
+
+annotations = []
+
+for comment in comments_to_annotate:
+    comment = comment[:512]
+    annotation = annotator(comment)
+    annotations.append(annotation)
+
+year2019_sample.loc[:1999, 'sentiment'] = [annotation[0]['label'] for annotation in annotations]
+
+print(year2019_sample.head(10))
+```
+
 ## Model Training
 
 - **Train-Test Split:** Data is divided into training and test sets with a standard 80-20 split.
