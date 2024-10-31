@@ -79,13 +79,11 @@ plt.show()
 ![sentimentDistribution2019](images/sentimentDistribution2019.png)
 ![sentimentDistribution2023](images/sentimentDistribution2023.png)
 
-## Model Training
+## TF-IDF Vectorization
 
 - **Train-Test Split:** Data is divided into training and test sets with a standard 80-20 split.
-- **TF-IDF**
-  - **Vectorization**
-    - Initializes a TF-IDF vectorizer with English stopwords and transforms the training data into TF-IDF vectors.
-    - Transforms the test data too into TF-IDF vectors and prints the shape of the resulting training and test matrices.
+- Initializes a TF-IDF vectorizer with English stopwords and transforms the training data into TF-IDF vectors.
+- Transforms the test data too into TF-IDF vectors and prints the shape of the resulting training and test matrices.
 
 
 ```python
